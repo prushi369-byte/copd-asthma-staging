@@ -12,6 +12,9 @@
 let currentStep = 1;
 const totalSteps = 5;
 
+// List of inhaler identifiers used in the form. These correspond to checkbox and frequency input IDs.
+const inhalerList = ['SABA', 'LABA', 'ICS', 'ICS_LABA', 'LAMA', 'other'];
+
 /**
  * Show only the active step and update navigation buttons.
  */
@@ -29,6 +32,27 @@ function showStep() {
   } else {
     nextBtn.textContent = 'Next';
   }
+}
+
+/**
+ * Attach event listeners to inhaler checkboxes so that the corresponding
+ * frequency fields are enabled only when the inhaler is selected. When
+ * unchecked, the frequency input is cleared and disabled.
+ */
+function setupInhalerFields() {
+  inhalerList.forEach(id => {
+    const checkbox = document.getElementById('inh_' + id);
+    const freqInput = document.getElementById('freq_' + id);
+    if (!checkbox || !freqInput) return;
+    // Initially disable all frequency fields (in case markup changed)
+    freqInput.disabled = !checkbox.checked;
+    checkbox.addEventListener('change', function () {
+      freqInput.disabled = !this.checked;
+      if (!this.checked) {
+        freqInput.value = '';
+      }
+    });
+  });
 }
 
 /**
@@ -82,9 +106,15 @@ function computeAsthmaStage() {
   const daytime = document.getElementById('daytime').value;
   const nighttime = document.getElementById('nighttime').value;
   const activity = document.getElementById('activity').value;
-  const inhalerCheckboxes = document.querySelectorAll('input[name="inhalers"]:checked');
-  const inhalers = Array.from(inhalerCheckboxes).map(cb => cb.value);
-  const frequency = document.getElementById('frequency').value;
+  // Gather inhaler selections and their frequency values
+  const inhalerData = [];
+  inhalerList.forEach(id => {
+    const cb = document.getElementById('inh_' + id);
+    const freq = document.getElementById('freq_' + id);
+    if (cb && cb.checked) {
+      inhalerData.push({ name: cb.value, freq: freq && freq.value ? freq.value : '' });
+    }
+  });
 
   // Maps for symptom severity
   const daytimeMap = { '<=2': 1, '3-6': 2, 'daily': 3, 'throughout': 4 };
@@ -141,10 +171,19 @@ function computeAsthmaStage() {
   if (!isNaN(fev1)) {
     resultHtml += `<p><strong>FEV<sub>1</sub>% provided:</strong> ${fev1}%</p>`;
   }
-  resultHtml += `<p><strong>Inhalers used:</strong> ${inhalers.length > 0 ? inhalers.join(', ') : 'None selected'}</p>`;
-  if (frequency) {
-    resultHtml += `<p><strong>Inhaler use frequency:</strong> ${frequency} times per week</p>`;
+  if (inhalerData.length > 0) {
+    resultHtml += `<p><strong>Inhalers used:</strong></p><ul>`;
+    inhalerData.forEach(item => {
+      const freqText = item.freq ? `${item.freq} times per week` : 'frequency not specified';
+      resultHtml += `<li>${item.name}: ${freqText}</li>`;
+    });
+    resultHtml += '</ul>';
+  } else {
+    resultHtml += `<p><strong>Inhalers used:</strong> None selected</p>`;
   }
+
+  // Add a button to download the report as a PDF
+  resultHtml += `<button type="button" id="downloadPdfBtn">Download PDF Report</button>`;
 
   // Hide the form and show the result
   document.getElementById('asthmaForm').style.display = 'none';
@@ -153,9 +192,39 @@ function computeAsthmaStage() {
   resultDiv.style.display = 'block';
   // scroll to result
   resultDiv.scrollIntoView({ behavior: 'smooth' });
+
+  // Attach click handler to download button after it has been added to DOM
+  const downloadBtn = document.getElementById('downloadPdfBtn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', downloadAsthmaReportPDF);
+  }
+}
+
+/**
+ * Generate a PDF file containing the asthma staging report using jsPDF and
+ * download it to the user's device. This function extracts the plain text
+ * from the result container and writes it into a PDF document.
+ */
+function downloadAsthmaReportPDF() {
+  // Ensure jsPDF is available
+  const { jsPDF } = window.jspdf || {};
+  if (!jsPDF) {
+    alert('PDF library not loaded. Please try again.');
+    return;
+  }
+  const resultDiv = document.getElementById('asthmaResult');
+  if (!resultDiv) return;
+  // Extract text content; replace multiple newlines and trim spaces
+  const text = resultDiv.innerText.trim();
+  const doc = new jsPDF();
+  const lines = doc.splitTextToSize(text, 180);
+  doc.setFontSize(12);
+  doc.text(lines, 10, 10);
+  doc.save('asthma_report.pdf');
 }
 
 // Initialize form display on page load
 window.addEventListener('DOMContentLoaded', () => {
   showStep();
+  // Inhaler frequency fields are always enabled; remove dynamic disabling
 });

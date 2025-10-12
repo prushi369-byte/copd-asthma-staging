@@ -85,10 +85,39 @@ function computeCOPD() {
   if (frequency) {
     resultHtml += `<p><strong>Inhaler use frequency:</strong> ${frequency} times per week</p>`;
   }
+  // Append a PDF download button
+  resultHtml += `<button type="button" id="downloadCopdPdfBtn">Download PDF Report</button>`;
   // Display the result and hide the form
   document.getElementById('copdForm').style.display = 'none';
   const resultDiv = document.getElementById('copdResult');
   resultDiv.innerHTML = resultHtml;
   resultDiv.style.display = 'block';
   resultDiv.scrollIntoView({ behavior: 'smooth' });
+
+  // Attach download button for PDF report after it has been added to the DOM
+  const downloadBtn = document.getElementById('downloadCopdPdfBtn');
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', downloadCopdReportPDF);
+  }
+}
+
+/**
+ * Generate a PDF file containing the COPD staging report using jsPDF and
+ * download it to the user's device. This function extracts the plain text
+ * from the result container and writes it into a PDF document.
+ */
+function downloadCopdReportPDF() {
+  const { jsPDF } = window.jspdf || {};
+  if (!jsPDF) {
+    alert('PDF library not loaded. Please try again.');
+    return;
+  }
+  const resultDiv = document.getElementById('copdResult');
+  if (!resultDiv) return;
+  const text = resultDiv.innerText.trim();
+  const doc = new jsPDF();
+  const lines = doc.splitTextToSize(text, 180);
+  doc.setFontSize(12);
+  doc.text(lines, 10, 10);
+  doc.save('copd_report.pdf');
 }

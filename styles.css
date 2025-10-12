@@ -127,6 +127,19 @@ button[disabled] {
   gap: 5px;
 }
 
+/* Layout for inhaler items in the asthma form (checkbox + frequency input) */
+.inhaler-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.inhaler-item input[type="number"] {
+  width: 120px;
+  padding: 5px;
+}
+
 .footnote {
   font-size: 0.8rem;
   color: #6c757d;
