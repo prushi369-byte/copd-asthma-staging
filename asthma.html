@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asthma GINA Staging Calculator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Asthma GINA Staging Calculator</h1>
+    <p>
+      Answer the following questions to estimate your asthma severity. This
+      calculator uses criteria from the Global Initiative for Asthma (GINA) and
+      other guidelines for classifying asthma based on symptom frequency and lung
+      function.
+    </p>
+    <form id="asthmaForm">
+      <!-- Step 1: Lung function -->
+      <div class="step active" id="step-1">
+        <h2>Step&nbsp;1: Lung Function</h2>
+        <div class="question">
+          <label for="fev1">FEV<sub>1</sub> as % of predicted (FEV<sub>1</sub>%):</label>
+          <input
+            type="number"
+            id="fev1"
+            name="fev1"
+            min="0"
+            max="200"
+            placeholder="Enter value (e.g., 85)"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Step 2: Daytime symptoms -->
+      <div class="step" id="step-2">
+        <h2>Step&nbsp;2: Daytime Symptoms</h2>
+        <div class="question">
+          <label for="daytime">How often do you experience daytime asthma symptoms?</label>
+          <select id="daytime" name="daytime" required>
+            <option value="">Select an option</option>
+            <option value="<=2">Less than or equal to 2&nbsp;days per week</option>
+            <option value="3-6">3–6&nbsp;days per week</option>
+            <option value="daily">Daily</option>
+            <option value="throughout">Throughout the day</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 3: Nighttime symptoms -->
+      <div class="step" id="step-3">
+        <h2>Step&nbsp;3: Night‑time Symptoms</h2>
+        <div class="question">
+          <label for="nighttime">How often do you wake up at night due to asthma symptoms?</label>
+          <select id="nighttime" name="nighttime" required>
+            <option value="">Select an option</option>
+            <option value="<=2">Two or fewer times per month</option>
+            <option value="3-4">Three to four times per month</option>
+            <option value="5+">Five or more times per month</option>
+            <option value="often">Often (weekly or nightly)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 4: Activity limitation -->
+      <div class="step" id="step-4">
+        <h2>Step&nbsp;4: Activity Limitation</h2>
+        <div class="question">
+          <label for="activity">How much do asthma symptoms limit your normal activities?</label>
+          <select id="activity" name="activity" required>
+            <option value="">Select an option</option>
+            <option value="none">No limitation</option>
+            <option value="minor">Minor limitation</option>
+            <option value="some">Some limitation</option>
+            <option value="extreme">Extreme limitation</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 5: Inhaler use -->
+      <div class="step" id="step-5">
+        <h2>Step&nbsp;5: Inhaler Use</h2>
+        <div class="question">
+          <label>Which inhalers do you currently use? (Select all that apply)</label>
+          <div class="inhaler-group">
+            <label><input type="checkbox" name="inhalers" value="SABA" /> Short‑acting beta agonist (SABA)</label>
+            <label><input type="checkbox" name="inhalers" value="LABA" /> Long‑acting beta agonist (LABA)</label>
+            <label><input type="checkbox" name="inhalers" value="ICS" /> Inhaled corticosteroid (ICS)</label>
+            <label><input type="checkbox" name="inhalers" value="ICS/LABA" /> Combination inhaler (ICS + LABA)</label>
+            <label><input type="checkbox" name="inhalers" value="LAMA" /> Long‑acting muscarinic antagonist (LAMA)</label>
+            <label><input type="checkbox" name="inhalers" value="other" /> Other</label>
+          </div>
+        </div>
+        <div class="question">
+          <label for="frequency">How often do you use your inhaler(s)? (times per week)</label>
+          <input
+            type="number"
+            id="frequency"
+            name="frequency"
+            min="0"
+            placeholder="e.g., 3"
+          />
+        </div>
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="navigation-buttons">
+        <button type="button" id="prevBtn" onclick="prevStep()" disabled>
+          Previous
+        </button>
+        <button type="button" id="nextBtn" onclick="nextStep()">
+          Next
+        </button>
+      </div>
+    </form>
+    <div id="asthmaResult" class="result" style="display: none"></div>
+
+    <script src="asthma.js"></script>
+  </body>
+</html>

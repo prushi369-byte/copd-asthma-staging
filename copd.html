@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COPD GOLD Staging Calculator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>COPD GOLD Staging Calculator</h1>
+    <p>
+      Complete the following questions to estimate your COPD grade and ABE group
+      based on the Global Initiative for Chronic Obstructive Lung Disease (GOLD)
+      recommendations. This tool uses your spirometry results, exacerbation
+      history and symptoms to classify your COPD.
+    </p>
+    <form id="copdForm">
+      <div class="question">
+        <label for="ratio">Post‑bronchodilator FEV<sub>1</sub>/FVC ratio (decimal):</label>
+        <input
+          type="number"
+          id="ratio"
+          name="ratio"
+          step="0.01"
+          min="0"
+          max="1"
+          placeholder="e.g., 0.65"
+          required
+        />
+      </div>
+      <div class="question">
+        <label for="fev1percent">FEV<sub>1</sub> as % of predicted (FEV<sub>1</sub>%):</label>
+        <input
+          type="number"
+          id="fev1percent"
+          name="fev1percent"
+          min="0"
+          max="200"
+          placeholder="e.g., 55"
+          required
+        />
+      </div>
+      <div class="question">
+        <label for="exacerbations">Number of moderate exacerbations in the past 12 months (not requiring hospitalization):</label>
+        <input
+          type="number"
+          id="exacerbations"
+          name="exacerbations"
+          min="0"
+          step="1"
+          placeholder="e.g., 1"
+          required
+        />
+      </div>
+      <div class="question">
+        <label for="hospitalizations">Number of COPD‑related hospitalizations in the past 12 months:</label>
+        <input
+          type="number"
+          id="hospitalizations"
+          name="hospitalizations"
+          min="0"
+          step="1"
+          placeholder="e.g., 0"
+          required
+        />
+      </div>
+      <div class="question">
+        <label>Modified Medical Research Council (mMRC) dyspnea scale:</label>
+        <div class="radio-group">
+          <label><input type="radio" name="mmrc" value="0" required /> 0 – Only breathless with strenuous exercise</label>
+          <label><input type="radio" name="mmrc" value="1" /> 1 – Short of breath when hurrying on level ground or walking up a slight hill</label>
+          <label><input type="radio" name="mmrc" value="2" /> 2 – Walks slower than people of same age because of breathlessness or has to stop for breath when walking at own pace</label>
+          <label><input type="radio" name="mmrc" value="3" /> 3 – Stops for breath after walking about 100 m or after a few minutes on level ground</label>
+          <label><input type="radio" name="mmrc" value="4" /> 4 – Too breathless to leave the house or breathless when dressing</label>
+        </div>
+      </div>
+      <div class="question">
+        <label>Which inhalers do you currently use? (Select all that apply)</label>
+        <div class="inhaler-group">
+          <label><input type="checkbox" name="inhalers" value="SABA" /> Short‑acting beta agonist (SABA)</label>
+          <label><input type="checkbox" name="inhalers" value="LABA" /> Long‑acting beta agonist (LABA)</label>
+          <label><input type="checkbox" name="inhalers" value="ICS" /> Inhaled corticosteroid (ICS)</label>
+          <label><input type="checkbox" name="inhalers" value="ICS/LABA" /> Combination inhaler (ICS + LABA)</label>
+          <label><input type="checkbox" name="inhalers" value="LAMA" /> Long‑acting muscarinic antagonist (LAMA)</label>
+          <label><input type="checkbox" name="inhalers" value="other" /> Other</label>
+        </div>
+      </div>
+      <div class="question">
+        <label for="copdFrequency">How often do you use your inhaler(s)? (times per week)</label>
+        <input
+          type="number"
+          id="copdFrequency"
+          name="frequency"
+          min="0"
+          placeholder="e.g., 4"
+        />
+      </div>
+      <div class="navigation-buttons">
+        <button type="button" onclick="computeCOPD()">Submit</button>
+      </div>
+    </form>
+    <div id="copdResult" class="result" style="display: none"></div>
+    <script src="copd.js"></script>
+  </body>
+</html>
