@@ -164,10 +164,50 @@ function computeAsthmaStage() {
         'Symptoms occur infrequently with minimal impact on daily activities.';
   }
 
+  // Determine treatment recommendation based on GINA 2025 guidelines.  Each stage
+  // corresponds to a step in the GINA stepwise approach.  For each level we
+  // describe the preferred Track 1 option (ICS‑formoterol) and an alternative
+  // Track 2 option (SABA‑based) as outlined in the 2025 GINA report.
+  let treatmentRecommendation = '';
+  if (severity === 1) {
+    // Step 1: mild intermittent asthma
+    treatmentRecommendation +=
+      '<p><strong>GINA 2025 recommended treatment:</strong></p><ul>' +
+      '<li><em>Preferred (Track 1):</em> As‑needed low‑dose inhaled corticosteroid‑formoterol (ICS‑formoterol).</li>' +
+      '<li><em>Alternative (Track 2):</em> As‑needed short‑acting beta agonist (SABA) plus a low‑dose inhaled corticosteroid taken whenever SABA is used.</li>' +
+      '</ul>';
+  } else if (severity === 2) {
+    // Step 2: mild persistent asthma
+    treatmentRecommendation +=
+      '<p><strong>GINA 2025 recommended treatment:</strong></p><ul>' +
+      '<li><em>Preferred (Track 1):</em> As‑needed low‑dose inhaled corticosteroid‑formoterol (ICS‑formoterol).</li>' +
+      '<li><em>Alternative (Track 2):</em> Regular low‑dose inhaled corticosteroid plus as‑needed SABA.</li>' +
+      '</ul>';
+  } else if (severity === 3) {
+    // Step 3: moderate persistent asthma
+    treatmentRecommendation +=
+      '<p><strong>GINA 2025 recommended treatment:</strong></p><ul>' +
+      '<li><em>Preferred (Track 1):</em> Daily maintenance low‑dose inhaled corticosteroid‑formoterol plus as‑needed inhaled corticosteroid‑formoterol (maintenance‑and‑reliever therapy).</li>' +
+      '<li><em>Alternative (Track 2):</em> Low‑ to medium‑dose inhaled corticosteroid–long‑acting beta agonist (ICS‑LABA) with as‑needed SABA.</li>' +
+      '</ul>';
+  } else if (severity >= 4) {
+    // Step 4 or higher: severe persistent asthma
+    treatmentRecommendation +=
+      '<p><strong>GINA 2025 recommended treatment:</strong></p><ul>' +
+      '<li><em>Preferred (Track 1):</em> Daily maintenance medium‑dose inhaled corticosteroid‑formoterol plus as‑needed inhaled corticosteroid‑formoterol.</li>' +
+      '<li><em>Alternative (Track 2):</em> Medium‑ to high‑dose inhaled corticosteroid–long‑acting beta agonist (ICS‑LABA) with as‑needed SABA.</li>' +
+      '<li>For very severe or uncontrolled symptoms (Step 5), consider add‑on treatments such as a long‑acting muscarinic antagonist (LAMA), azithromycin (in appropriate patients), biologic therapies, or oral corticosteroids as a last resort.</li>' +
+      '</ul>';
+  }
+
   // Build result HTML
   let resultHtml = `<h2>Results</h2>`;
   resultHtml += `<p><strong>Estimated Asthma Severity:</strong> ${stageName}</p>`;
   resultHtml += `<p>${stageDescription}</p>`;
+  // Append guideline‑based treatment recommendation
+  if (treatmentRecommendation) {
+    resultHtml += treatmentRecommendation;
+  }
   if (!isNaN(fev1)) {
     resultHtml += `<p><strong>FEV<sub>1</sub>% provided:</strong> ${fev1}%</p>`;
   }

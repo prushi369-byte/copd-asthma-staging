@@ -77,6 +77,35 @@ function computeCOPD() {
   resultHtml += `<p>${goldDescription}</p>`;
   resultHtml += `<p><strong>ABE Group:</strong> ${abeGroup}</p>`;
   resultHtml += `<p>${abeDescription}</p>`;
+  // Provide treatment recommendation based on the GOLD 2025 pocket guide.  The
+  // recommendations are tailored to the patient’s ABE group and summarise
+  // first‑line inhaler therapy as described in the GOLD guidelines.
+  let copdRecommendation = '';
+  if (abeGroup === 'Group A') {
+    copdRecommendation +=
+      '<p><strong>GOLD 2025 recommended treatment:</strong></p><ul>' +
+      '<li>Offer bronchodilator therapy to relieve breathlessness; this may be a short‑acting or long‑acting bronchodilator. A long‑acting bronchodilator (LABA or LAMA) is preferred if available and affordable except in patients with very occasional breathlessness.</li>' +
+      '<li>Continue treatment if benefit is documented; reassess regularly.</li>' +
+      '<li>Rescue short‑acting bronchodilators should be prescribed to all patients for immediate symptom relief【525439884052066†L1210-L1211】.</li>' +
+      '</ul>';
+  } else if (abeGroup === 'Group B') {
+    copdRecommendation +=
+      '<p><strong>GOLD 2025 recommended treatment:</strong></p><ul>' +
+      '<li>Initiate therapy with a combination of a long‑acting beta agonist and a long‑acting muscarinic antagonist (LABA+LAMA); clinical trials demonstrate that LABA+LAMA is superior to LAMA alone for symptom control.</li>' +
+      '<li>If LABA+LAMA is not appropriate, there is no evidence to recommend one class of long‑acting bronchodilator over another; select either LABA or LAMA based on the patient’s perception of symptom relief.</li>' +
+      '<li>Investigate and manage comorbidities that may contribute to symptoms.</li>' +
+      '<li>Rescue short‑acting bronchodilators should be prescribed to all patients for immediate symptom relief【525439884052066†L1210-L1211】.</li>' +
+      '</ul>';
+  } else if (abeGroup === 'Group E') {
+    copdRecommendation +=
+      '<p><strong>GOLD 2025 recommended treatment:</strong></p><ul>' +
+      '<li>A dual bronchodilator combination (LABA+LAMA) is the preferred initial therapy.</li>' +
+      '<li>Do not initiate LABA+ICS without LAMA; if an inhaled corticosteroid is indicated (e.g., blood eosinophil count ≥300 cells/µL or concomitant asthma), use triple therapy with LABA+LAMA+ICS, which is superior to LABA+ICS.</li>' +
+      '<li>Consider triple therapy at diagnosis when eosinophil count is high (≥300 cells/µL).</li>' +
+      '<li>Patients with COPD and co‑existing asthma should be treated like asthma patients, making inhaled corticosteroids mandatory.</li>' +
+      '<li>Rescue short‑acting bronchodilators should be prescribed to all patients for immediate symptom relief【525439884052066†L1210-L1211】.</li>' +
+      '</ul>';
+  }
   resultHtml += `<p><strong>FEV<sub>1</sub>% provided:</strong> ${fev1percent}%</p>`;
   resultHtml += `<p><strong>mMRC score:</strong> ${mmrc}</p>`;
   resultHtml += `<p><strong>Number of moderate exacerbations:</strong> ${exacerbations}</p>`;
@@ -84,6 +113,10 @@ function computeCOPD() {
   resultHtml += `<p><strong>Inhalers used:</strong> ${inhalers.length > 0 ? inhalers.join(', ') : 'None selected'}</p>`;
   if (frequency) {
     resultHtml += `<p><strong>Inhaler use frequency:</strong> ${frequency} times per week</p>`;
+  }
+  // Append recommendation if available
+  if (copdRecommendation) {
+    resultHtml += copdRecommendation;
   }
   // Append a PDF download button
   resultHtml += `<button type="button" id="downloadCopdPdfBtn">Download PDF Report</button>`;
